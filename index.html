@@ -30,13 +30,51 @@
     }
     /* NAVBAR */
     nav {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
-    }
+/* NAVBAR — Cream + Gold Theme */
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #fff7e2; /* light cream */
+  border-bottom: 1px solid #e8d7b8; /* soft beige border */
+  backdrop-filter: blur(10px);
+}
+
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  color: #5a4a2d; /* warm dark brown */
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: #7a6a50; /* muted gold-brown text */
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav-links a:hover {
+  background: #f3e6c1; /* light gold hover */
+  color: #5a4a2d; /* dark brown */
+}
+
+.nav-links a.active {
+  background: #eac76b; /* gold button */
+  color: #3c2f14; /* dark brown text */
+  font-weight: 600;
+}
+
     .nav-inner {
       max-width: 1100px;
       margin: 0 auto;
