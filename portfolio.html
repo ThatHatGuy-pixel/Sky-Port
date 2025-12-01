@@ -48,3 +48,304 @@
       letter-spacing: 0.05em;
     }
     .nav-links {
+      display: flex;
+      gap: 18px;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.95rem;
+      padding: 8px 14px;
+      border-radius: 999px;
+      color: var(--muted);
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav-links a:hover {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .nav-links a.active {
+      background: var(--accent);
+      color: #0b1120;
+      font-weight: 600;
+    }
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 20px 60px;
+    }
+    h1 {
+      margin-bottom: 6px;
+    }
+    .lead {
+      color: var(--muted);
+      margin-bottom: 24px;
+      max-width: 600px;
+      font-size: 0.95rem;
+    }
+    .section {
+      margin-bottom: 40px;
+    }
+    .section-title {
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+    }
+    .section-subtitle {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-img {
+      background: #020617;
+      padding: 6px;
+      text-align: center;
+    }
+    .card-img img {
+      max-width: 100%;
+      border-radius: 6px;
+      display: block;
+      margin: 0 auto;
+    }
+    .card-body {
+      padding: 12px 14px 16px;
+    }
+    .card-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .card-title {
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+    .card-text {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 0.75rem;
+    }
+    .pill {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--muted);
+    }
+    footer {
+      border-top: 1px solid rgba(148, 163, 184, 0.3);
+      padding: 16px 20px 24px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-logo">YOUR NAME</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="portfolio.html" class="active">Portfolio</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page">
+    <header>
+      <h1>Portfolio</h1>
+      <p class="lead">
+        <!-- FILL -->
+        This page shows my strongest work across character design, painting,
+        3D modeling, animation, woodworking, and game art. All pieces here
+        represent my current skill level.
+      </p>
+    </header>
+
+    <!-- 2D ART -->
+    <section class="section" id="2d-art">
+      <h2 class="section-title">2D Art & Character Design</h2>
+      <p class="section-subtitle">
+        <!-- FILL -->
+        Final character designs, illustration pieces, and key sketches.
+      </p>
+      <div class="grid">
+        <!-- DUPLICATE CARDS FOR EACH PIECE -->
+        <article class="card">
+          <div class="card-img">
+            <!-- FILL: path to your image -->
+            <img src="images/character1.jpg" alt="Character design piece" />
+          </div>
+          <div class="card-body">
+            <div class="card-label">Character Design</div>
+            <h3 class="card-title">
+              <!-- FILL -->
+              Flame Guardian – Playable Character
+            </h3>
+            <p class="card-text">
+              <!-- FILL -->
+              Final design sheet including front, side, and 3/4 views, plus
+              color exploration and expression studies.
+            </p>
+            <div class="pill-row">
+              <span class="pill">Procreate</span>
+              <span class="pill">Turnaround</span>
+              <span class="pill">Color Study</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 3D MODELING -->
+    <section class="section" id="3d">
+      <h2 class="section-title">3D Modeling & Sculpting</h2>
+      <p class="section-subtitle">
+        <!-- FILL -->
+        Game-ready characters and props with focus on topology, silhouette,
+        and materials.
+      </p>
+      <div class="grid">
+        <article class="card">
+          <div class="card-img">
+            <img src="images/3d-character1.jpg" alt="3D character model" />
+          </div>
+          <div class="card-body">
+            <div class="card-label">3D Character</div>
+            <h3 class="card-title">Crystal Guardian – Game-Ready Model</h3>
+            <p class="card-text">
+              <!-- FILL -->
+              Sculpted and retopologized in Blender with PBR textures and
+              rigging for in-engine animation.
+            </p>
+            <div class="pill-row">
+              <span class="pill">Blender</span>
+              <span class="pill">Retopo</span>
+              <span class="pill">Rigged</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ANIMATION -->
+    <section class="section" id="animation">
+      <h2 class="section-title">Animation</h2>
+      <p class="section-subtitle">
+        <!-- FILL -->
+        Character animation cycles and short sequences for gameplay.
+      </p>
+      <div class="grid">
+        <article class="card">
+          <div class="card-img">
+            <!-- FILL: thumbnail image for the animation -->
+            <img src="images/anim-walkcycle.jpg" alt="Walk cycle thumbnail" />
+          </div>
+          <div class="card-body">
+            <div class="card-label">Character Animation</div>
+            <h3 class="card-title">Playable Character – Walk & Idle Cycle</h3>
+            <p class="card-text">
+              <!-- FILL -->
+              A looping animation showing personality through weight, timing,
+              and spacing.
+            </p>
+            <div class="pill-row">
+              <span class="pill">Blender</span>
+              <span class="pill">Game Animation</span>
+              <span class="pill">Looping</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- WOODWORKING / PHYSICAL -->
+    <section class="section" id="woodwork">
+      <h2 class="section-title">Woodworking & Physical Builds</h2>
+      <p class="section-subtitle">
+        <!-- FILL -->
+        Physical props and objects related to my game world and creature
+        designs.
+      </p>
+      <div class="grid">
+        <article class="card">
+          <div class="card-img">
+            <img src="images/wood-prop1.jpg" alt="Wooden prop" />
+          </div>
+          <div class="card-body">
+            <div class="card-label">Physical Prop</div>
+            <h3 class="card-title">
+              <!-- FILL -->
+              Elemental Totem – Wooden Sculpture
+            </h3>
+            <p class="card-text">
+              <!-- FILL -->
+              A hand-crafted wooden totem based on one of my in-game artifacts,
+              focusing on shape and texture.
+            </p>
+            <div class="pill-row">
+              <span class="pill">Woodworking</span>
+              <span class="pill">Hand-Crafted</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- GAME PROJECT SECTION -->
+    <section class="section" id="game-project">
+      <h2 class="section-title">Game Project – Skylanders-Inspired</h2>
+      <p class="section-subtitle">
+        <!-- FILL -->
+        A creature-collecting, character-focused game inspired by Skylanders,
+        with original designs and worldbuilding.
+      </p>
+      <div class="grid">
+        <article class="card">
+          <div class="card-img">
+            <img src="images/game-screenshot1.jpg" alt="Game screenshot" />
+          </div>
+          <div class="card-body">
+            <div class="card-label">Game Art</div>
+            <h3 class="card-title">In-Engine Screenshot – Battle Arena</h3>
+            <p class="card-text">
+              <!-- FILL -->
+              Prototype arena showcasing lighting, character placement, and
+              gameplay readability.
+            </p>
+            <div class="pill-row">
+              <span class="pill">Unity / Unreal</span>
+              <span class="pill">Level Art</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © YOUR NAME – Portfolio
+  </footer>
+</body>
+</html>
