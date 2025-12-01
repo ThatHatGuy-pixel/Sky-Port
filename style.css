@@ -1,0 +1,284 @@
+/* GENERAL */
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: #fafafa;
+    color: #222;
+}
+
+h1, h2 {
+    font-weight: 600;
+}
+
+section {
+    padding: 80px 10%;
+}
+
+/* NAVIGATION */
+header {
+    background: #ffffffcc;
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 10%;
+}
+
+nav .logo {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    margin: 0;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 400;
+    position: relative;
+}
+
+/* underline hover */
+nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0;
+    height: 2px;
+    background: #000;
+    transition: width 0.2s;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+nav a:hover {
+    color: #000;
+}
+
+/* current page link */
+nav a.active {
+    color: #000;
+    font-weight: 600;
+}
+
+/* HERO */
+.hero {
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    background: url('images/yourbanner.jpg') center/cover no-repeat;
+    color: #fff;
+    padding: 10%;
+}
+
+.hero-text {
+    max-width: 500px;
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 12px 25px;
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+/* PORTFOLIO */
+
+.portfolio h2 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.filter-buttons {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.filter-buttons button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    background: #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.filter-buttons button:hover {
+    background: #bbb;
+}
+
+/* GALLERY GRID */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.gallery img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: transform 0.3s;
+}
+
+.gallery img:hover {
+    transform: scale(1.03);
+}
+
+/* ABOUT */
+
+.about p {
+    max-width: 700px;
+    margin: auto;
+    line-height: 1.7;
+}
+
+/* CONTACT */
+
+.contact p {
+    text-align: center;
+    line-height: 2;
+}
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #eee;
+    margin-top: 40px;
+}
+
+/* ========================= */
+/* BLOG PAGE STYLES          */
+/* ========================= */
+
+.blog-hero {
+    padding: 80px 10% 40px;
+    background: #f0f0f0;
+}
+
+.blog-hero-inner {
+    max-width: 700px;
+}
+
+.blog-hero h1 {
+    margin-bottom: 10px;
+}
+
+.blog-hero p {
+    line-height: 1.7;
+    color: #555;
+}
+
+/* main blog section */
+.blog {
+    padding-top: 40px;
+    padding-bottom: 80px;
+}
+
+.blog-posts {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.post-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 25px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.post-meta {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #777;
+    margin-bottom: 6px;
+    display: flex;
+    gap: 10px;
+}
+
+.post-title {
+    font-size: 20px;
+    margin: 0 0 10px;
+}
+
+.post-summary {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.post-body {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.7;
+}
+
+/* before/after layout */
+.post-before-after {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.post-before-after .ba {
+    background: #fafafa;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    font-size: 13px;
+}
+
+.post-before-after h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+.post-before-after img {
+    width: 100%;
+    border-radius: 6px;
+    margin-bottom: 6px;
+}
+
+/* RESPONSIVE TWEAKS */
+@media (max-width: 768px) {
+    section {
+        padding: 60px 7%;
+    }
+
+    nav {
+        padding: 12px 7%;
+    }
+
+    .hero {
+        padding: 15% 7%;
+        height: 60vh;
+    }
+}
