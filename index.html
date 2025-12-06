@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +17,18 @@
     <header>
         <nav>
             <div class="logo">Harris Ross</div>
+
+            <!-- SEARCH BAR IN NAV -->
+            <div class="nav-search">
+                <input
+                    type="text"
+                    id="navSearchInput"
+                    class="nav-search-input"
+                    placeholder="Search art & blog..."
+                    readonly
+                />
+            </div>
+
             <ul>
                 <li><a href="index.html" class="nav-link active">Home</a></li>
                 <li><a href="index.html#work" class="nav-link">Portfolio</a></li>
@@ -28,10 +41,24 @@
 
     <!-- HERO SECTION -->
     <section class="hero">
-        <div class="hero-text">
-            <h1>Artist • Animator • Game Developer</h1>
-            <p>Creating immersive worlds through art, motion, and design.</p>
-            <a href="#work" class="btn">View My Work</a>
+        <div class="hero-inner">
+
+            <!-- HERO ILLUSTRATION TEMPLATE: replace this with my own drawing -->
+            <div class="hero-illustration-template">
+                <div class="hero-illustration-box">
+                    <!-- HERO ILLUSTRATION TEMPLATE: replace this box with a custom illustration that blends with the background -->
+                    <span class="hero-illustration-text">
+                        Hero art placeholder<br />
+                        (drop your own image here)
+                    </span>
+                </div>
+            </div>
+
+            <div class="hero-text">
+                <h1>Artist • Animator • Game Developer</h1>
+                <p>Creating immersive worlds through art, motion, and design.</p>
+                <a href="#work" class="btn">View My Work</a>
+            </div>
         </div>
     </section>
 
@@ -50,11 +77,55 @@
 
         <div class="gallery">
             <!-- Replace the image URLs below with your own -->
-            <div class="item paintings"><img src="AIE/Ani 3.jpg" alt="Painting"></div>
-            <div class="item animation"><img src="images/animation1.gif" alt="Animation"></div>
-            <div class="item sketches"><img src="images/sketch1.jpg" alt="Sketch"></div>
-            <div class="item characters"><img src="images/character1.jpg" alt="Character Design"></div>
-            <div class="item gamedev"><img src="images/gamedev1.jpg" alt="Game Dev"></div>
+            <div class="item paintings"
+                 data-art-id="art-1"
+                 data-art-title="Example Painting Title"
+                 data-art-description="An example painting demonstrating colour, composition, and atmosphere. Replace this description with your own notes about process and intent.">
+                <img src="AIE/Ani 3.jpg" alt="Painting">
+            </div>
+
+            <div class="item animation"
+                 data-art-id="art-2"
+                 data-art-title="Example Animation Loop"
+                 data-art-description="Short looping animation used as a test for timing, spacing, and character personality.">
+                <img src="images/animation1.gif" alt="Animation">
+            </div>
+
+            <div class="item sketches"
+                 data-art-id="art-3"
+                 data-art-title="Example Sketch Page"
+                 data-art-description="Rough exploratory sketches for characters and props.">
+                <img src="images/sketch1.jpg" alt="Sketch">
+            </div>
+
+            <div class="item characters"
+                 data-art-id="art-4"
+                 data-art-title="Example Character Design"
+                 data-art-description="A character concept sheet showing full body, expressions, and outfit details.">
+                <img src="images/character1.jpg" alt="Character Design">
+            </div>
+
+            <div class="item gamedev"
+                 data-art-id="art-5"
+                 data-art-title="Example Game Screenshot"
+                 data-art-description="In-engine screenshot from a prototype level.">
+                <img src="images/gamedev1.jpg" alt="Game Dev">
+            </div>
+
+            <!-- Additional template artworks -->
+            <div class="item paintings"
+                 data-art-id="art-6"
+                 data-art-title="Example Artwork Title A"
+                 data-art-description="Template artwork slot A. Replace the image, title, and description with your own piece.">
+                <img src="images/example-art-a.jpg" alt="Example Artwork A">
+            </div>
+
+            <div class="item characters"
+                 data-art-id="art-7"
+                 data-art-title="Example Artwork Title B"
+                 data-art-description="Template artwork slot B. Use this for another character or creature design.">
+                <img src="images/example-art-b.jpg" alt="Example Artwork B">
+            </div>
         </div>
     </section>
 
@@ -80,23 +151,389 @@
         © 2025 Your Name — All Rights Reserved
     </footer>
 
+    <!-- ART VIEWER MODAL START -->
+    <div class="art-viewer-overlay" id="artViewerOverlay" aria-hidden="true">
+        <div class="overlay-backdrop" data-close="art-viewer"></div>
+        <div class="art-viewer-panel">
+            <div class="art-main">
+                <h2 class="art-viewer-title" id="artViewerTitle">Artwork title</h2>
+
+                <div class="art-main-image-wrapper" id="artMainWrapper">
+                    <img id="artViewerImage" src="" alt="Selected artwork">
+                    <!-- Fullscreen icon placeholder; I’ll replace with my own graphic later -->
+                    <button class="art-fullscreen-btn" id="artFullscreenBtn" aria-label="Toggle fullscreen">
+                        <span class="fs-icon fs-enter"></span>
+                    </button>
+                </div>
+
+                <p class="art-viewer-description" id="artViewerDescription">
+                    Artwork description will appear here.
+                </p>
+            </div>
+
+            <aside class="art-sidebar">
+                <h3 class="art-sidebar-heading">Other artworks</h3>
+                <div class="art-list" id="artList">
+                    <!-- populated by JS -->
+                </div>
+            </aside>
+
+            <button class="overlay-close-btn" id="artViewerClose" aria-label="Close art viewer">
+                <span class="close-icon"></span>
+            </button>
+        </div>
+    </div>
+    <!-- ART VIEWER MODAL END -->
+
+    <!-- SEARCH OVERLAY START -->
+    <div class="search-overlay" id="searchOverlay" aria-hidden="true">
+        <div class="search-overlay-backdrop" data-close="search-overlay"></div>
+        <div class="search-overlay-panel">
+            <button class="overlay-close-btn" id="searchClose" aria-label="Close search">
+                <span class="close-icon"></span>
+            </button>
+
+            <div class="search-overlay-header">
+                <input
+                    type="text"
+                    id="searchInputOverlay"
+                    class="search-input-overlay"
+                    placeholder="Search artworks..."
+                    autocomplete="off"
+                />
+            </div>
+
+            <div class="search-overlay-results" id="searchResults">
+                <!-- default and filtered search results rendered here -->
+            </div>
+        </div>
+    </div>
+    <!-- SEARCH OVERLAY END -->
+
     <script>
-        // Simple filter script
-        const buttons = document.querySelectorAll(".filter-buttons button");
-        const items = document.querySelectorAll(".gallery .item");
+        document.addEventListener("DOMContentLoaded", function () {
+            /* ===========================
+               PORTFOLIO FILTER
+               =========================== */
+            const buttons = document.querySelectorAll(".filter-buttons button");
+            const items = document.querySelectorAll(".gallery .item");
 
-        buttons.forEach(btn => {
-            btn.addEventListener("click", () => {
-                const filter = btn.dataset.filter;
+            buttons.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const filter = btn.dataset.filter;
 
-                items.forEach(item => {
-                    if (filter === "all" || item.classList.contains(filter)) {
-                        item.style.display = "block";
-                    } else {
-                        item.style.display = "none";
-                    }
+                    items.forEach(item => {
+                        if (filter === "all" || item.classList.contains(filter)) {
+                            item.style.display = "block";
+                        } else {
+                            item.style.display = "none";
+                        }
+                    });
                 });
             });
+
+            /* ===========================
+               ART VIEWER LOGIC
+               =========================== */
+            const galleryItems = document.querySelectorAll(".gallery .item");
+            const artViewerOverlay = document.getElementById("artViewerOverlay");
+            const artViewerTitle = document.getElementById("artViewerTitle");
+            const artViewerImage = document.getElementById("artViewerImage");
+            const artViewerDescription = document.getElementById("artViewerDescription");
+            const artListContainer = document.getElementById("artList");
+            const artViewerClose = document.getElementById("artViewerClose");
+            const artBackdrop = document.querySelector(".art-viewer-overlay .overlay-backdrop");
+            const artFullscreenBtn = document.getElementById("artFullscreenBtn");
+            const artMainWrapper = document.getElementById("artMainWrapper");
+
+            const artData = [];
+
+            galleryItems.forEach((item, index) => {
+                const img = item.querySelector("img");
+                if (!img) return;
+
+                const id = item.dataset.artId || "art-" + index;
+                const title = item.dataset.artTitle || img.alt || "Untitled artwork";
+                const description = item.dataset.artDescription || "";
+
+                artData.push({
+                    id,
+                    title,
+                    description,
+                    src: img.getAttribute("src")
+                });
+
+                // Click on gallery item opens art viewer
+                item.addEventListener("click", () => {
+                    openArtViewerById(id);
+                });
+            });
+
+            function buildArtList() {
+                if (!artListContainer) return;
+                artListContainer.innerHTML = "";
+                artData.forEach(art => {
+                    const button = document.createElement("button");
+                    button.className = "art-list-item";
+                    button.setAttribute("data-art-id", art.id);
+                    button.innerHTML = `
+                        <div class="art-list-thumb">
+                            <img src="${art.src}" alt="${art.title}">
+                        </div>
+                        <div class="art-list-text">
+                            <span class="art-list-title">${art.title}</span>
+                        </div>
+                    `;
+                    button.addEventListener("click", () => {
+                        openArtViewerById(art.id);
+                    });
+                    artListContainer.appendChild(button);
+                });
+            }
+
+            function setActiveArtListItem(id) {
+                if (!artListContainer) return;
+                const listItems = artListContainer.querySelectorAll(".art-list-item");
+                listItems.forEach(el => {
+                    if (el.dataset.artId === id) {
+                        el.classList.add("active");
+                    } else {
+                        el.classList.remove("active");
+                    }
+                });
+            }
+
+            function openArtViewerById(id) {
+                const art = artData.find(a => a.id === id);
+                if (!art) return;
+
+                if (!artListContainer.innerHTML.trim()) {
+                    buildArtList();
+                }
+
+                artViewerTitle.textContent = art.title;
+                artViewerImage.src = art.src;
+                artViewerImage.alt = art.title;
+                artViewerDescription.textContent = art.description;
+
+                setActiveArtListItem(id);
+
+                artViewerOverlay.classList.add("open");
+                document.body.classList.add("art-viewer-open");
+                artViewerOverlay.setAttribute("aria-hidden", "false");
+            }
+
+            function closeArtViewer() {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen().catch(() => {});
+                }
+                document.body.classList.remove("fullscreen-art");
+                artViewerOverlay.classList.remove("open");
+                document.body.classList.remove("art-viewer-open");
+                artViewerOverlay.setAttribute("aria-hidden", "true");
+            }
+
+            if (artViewerClose) {
+                artViewerClose.addEventListener("click", closeArtViewer);
+            }
+            if (artBackdrop) {
+                artBackdrop.addEventListener("click", closeArtViewer);
+            }
+
+            // Fullscreen toggle using Fullscreen API (with fallback)
+            let isFullscreen = false;
+
+            function enterArtFullscreen() {
+                if (artMainWrapper.requestFullscreen) {
+                    artMainWrapper.requestFullscreen().catch(() => {});
+                }
+                document.body.classList.add("fullscreen-art");
+                isFullscreen = true;
+                updateFullscreenIcon();
+            }
+
+            function exitArtFullscreen() {
+                if (document.fullscreenElement && document.exitFullscreen) {
+                    document.exitFullscreen().catch(() => {});
+                }
+                document.body.classList.remove("fullscreen-art");
+                isFullscreen = false;
+                updateFullscreenIcon();
+            }
+
+            function updateFullscreenIcon() {
+                const icon = artFullscreenBtn.querySelector(".fs-icon");
+                if (!icon) return;
+                icon.classList.toggle("fs-enter", !isFullscreen);
+                icon.classList.toggle("fs-exit", isFullscreen);
+            }
+
+            if (artFullscreenBtn) {
+                artFullscreenBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    if (!isFullscreen) {
+                        enterArtFullscreen();
+                    } else {
+                        exitArtFullscreen();
+                    }
+                });
+            }
+
+            document.addEventListener("fullscreenchange", () => {
+                if (!document.fullscreenElement) {
+                    document.body.classList.remove("fullscreen-art");
+                    isFullscreen = false;
+                    updateFullscreenIcon();
+                }
+            });
+
+            /* ===========================
+               SEARCH OVERLAY LOGIC
+               (artworks only on this page)
+               =========================== */
+            const navSearchInput = document.getElementById("navSearchInput");
+            const searchOverlay = document.getElementById("searchOverlay");
+            const searchOverlayBackdrop = document.querySelector(".search-overlay-backdrop");
+            const searchInputOverlay = document.getElementById("searchInputOverlay");
+            const searchResults = document.getElementById("searchResults");
+            const searchCloseBtn = document.getElementById("searchClose");
+
+            function openSearchOverlay() {
+                if (!searchOverlay) return;
+                searchOverlay.classList.add("open");
+                document.body.classList.add("search-open");
+                searchOverlay.setAttribute("aria-hidden", "false");
+                if (searchInputOverlay) {
+                    searchInputOverlay.value = "";
+                    renderDefaultSearchResults();
+                    searchInputOverlay.focus();
+                }
+            }
+
+            function closeSearchOverlay() {
+                if (!searchOverlay) return;
+                searchOverlay.classList.remove("open");
+                document.body.classList.remove("search-open");
+                searchOverlay.setAttribute("aria-hidden", "true");
+            }
+
+            if (navSearchInput) {
+                navSearchInput.addEventListener("click", openSearchOverlay);
+                navSearchInput.addEventListener("focus", openSearchOverlay);
+            }
+            if (searchCloseBtn) {
+                searchCloseBtn.addEventListener("click", closeSearchOverlay);
+            }
+            if (searchOverlayBackdrop) {
+                searchOverlayBackdrop.addEventListener("click", closeSearchOverlay);
+            }
+
+            function highlightText(text, query) {
+                if (!query) return text;
+                const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                const regex = new RegExp(escaped, "gi");
+                return text.replace(regex, (match) => `<span class="highlight">${match}</span>`);
+            }
+
+            function renderDefaultSearchResults() {
+                if (!searchResults) return;
+                searchResults.innerHTML = "";
+
+                const wrapper = document.createElement("div");
+                wrapper.className = "search-default-grid";
+
+                artData.slice(0, 6).forEach(art => {
+                    const card = document.createElement("button");
+                    card.className = "search-result search-result-art";
+                    card.innerHTML = `
+                        <div class="search-result-thumb">
+                            <img src="${art.src}" alt="${art.title}">
+                        </div>
+                        <div class="search-result-info">
+                            <h3 class="search-result-title">${art.title}</h3>
+                            <p class="search-result-snippet">
+                                ${art.description || "Click to view this artwork in the viewer."}
+                            </p>
+                        </div>
+                    `;
+                    card.addEventListener("click", () => {
+                        closeSearchOverlay();
+                        openArtViewerById(art.id);
+                    });
+                    wrapper.appendChild(card);
+                });
+
+                searchResults.appendChild(wrapper);
+            }
+
+            function renderSearchResults(query) {
+                if (!searchResults) return;
+                const q = query.trim().toLowerCase();
+                if (!q) {
+                    renderDefaultSearchResults();
+                    return;
+                }
+
+                searchResults.innerHTML = "";
+
+                const matches = artData.filter(art => {
+                    return (
+                        art.title.toLowerCase().includes(q) ||
+                        (art.description && art.description.toLowerCase().includes(q))
+                    );
+                });
+
+                if (matches.length === 0) {
+                    const empty = document.createElement("p");
+                    empty.className = "search-empty";
+                    empty.textContent = "No artworks found for that search.";
+                    searchResults.appendChild(empty);
+                    return;
+                }
+
+                const list = document.createElement("div");
+                list.className = "search-results-list";
+
+                matches.forEach(art => {
+                    const descText = art.description || "";
+                    const snippet = descText;
+
+                    const card = document.createElement("button");
+                    card.className = "search-result search-result-art";
+                    card.innerHTML = `
+                        <div class="search-result-thumb">
+                            <img src="${art.src}" alt="${art.title}">
+                        </div>
+                        <div class="search-result-info">
+                            <h3 class="search-result-title">${highlightText(art.title, q)}</h3>
+                            <p class="search-result-snippet">
+                                ${highlightText(snippet, q)}
+                            </p>
+                        </div>
+                    `;
+                    card.addEventListener("click", () => {
+                        closeSearchOverlay();
+                        openArtViewerById(art.id);
+                    });
+                    list.appendChild(card);
+                });
+
+                searchResults.appendChild(list);
+            }
+
+            if (searchInputOverlay) {
+                searchInputOverlay.addEventListener("input", (e) => {
+                    renderSearchResults(e.target.value);
+                });
+            }
+
+            // Prepare default search content on load
+            if (searchOverlay && searchResults) {
+                renderDefaultSearchResults();
+            }
+
+            // Expose for potential cross-script use
+            window.openArtViewerById = openArtViewerById;
         });
     </script>
 
