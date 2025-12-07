@@ -190,9 +190,6 @@
     <div class="art-viewer-overlay" id="artViewerOverlay" aria-hidden="true">
         <div class="overlay-backdrop" data-close="art-viewer"></div>
         <div class="art-viewer-panel draggable-panel">
-            <!-- DRAG BAR FOR FLOATING WINDOW -->
-            <div class="panel-drag-bar art-drag-bar"></div>
-
             <div class="art-main">
                 <h2 class="art-viewer-title" id="artViewerTitle">Artwork title</h2>
 
@@ -415,6 +412,7 @@
             let isFullscreen = false;
 
             function enterArtFullscreen() {
+                // MUST be full screen: requestFullscreen on wrapper
                 if (artMainWrapper.requestFullscreen) {
                     artMainWrapper.requestFullscreen().catch(() => {});
                 }
@@ -451,7 +449,7 @@
             }
 
             document.addEventListener("fullscreenchange", () => {
-                if (!document.fullscreenElement) {
+                if (!document.fullscreenElement && isFullscreen) {
                     document.body.classList.remove("fullscreen-art");
                     isFullscreen = false;
                     updateFullscreenIcon();
@@ -470,21 +468,34 @@
 
             /* ==========================================
                DRAGGABLE / RESIZABLE PANEL (ART VIEWER)
+               Drag from anywhere that isn't a clickable control.
+               Disabled while in fullscreen.
                ========================================== */
-            function initDraggablePanel(overlaySelector, panelSelector, dragBarSelector) {
+            function initDraggablePanel(overlaySelector, panelSelector) {
                 const overlay = document.querySelector(overlaySelector);
                 const panel = document.querySelector(panelSelector);
-                const dragBar = panel ? panel.querySelector(dragBarSelector) : null;
-                if (!overlay || !panel || !dragBar) return;
+                if (!overlay || !panel) return;
 
                 let isDragging = false;
                 let startX = 0, startY = 0;
                 let startLeft = 0, startTop = 0;
 
+                function isInteractive(el) {
+                    const tags = ["BUTTON", "A", "INPUT", "TEXTAREA", "SELECT", "LABEL"];
+                    while (el && el !== panel) {
+                        if (tags.includes(el.tagName)) return true;
+                        el = el.parentElement;
+                    }
+                    return false;
+                }
+
                 function onMouseDown(e) {
                     if (e.button !== 0) return;
-                    isDragging = true;
+                    if (document.fullscreenElement) return; // don't drag when maximised
 
+                    if (isInteractive(e.target)) return;
+
+                    isDragging = true;
                     overlay.classList.add("no-blur");
                     panel.classList.add("panel-floating");
 
@@ -522,25 +533,22 @@
                     document.removeEventListener("mouseup", onMouseUp);
                 }
 
-                dragBar.addEventListener("mousedown", onMouseDown);
+                panel.addEventListener("mousedown", onMouseDown);
 
-                // Click on drag bar toggles blur if not dragging
-                dragBar.addEventListener("click", function () {
-                    if (!isDragging) {
-                        overlay.classList.toggle("no-blur");
-                    }
-                });
-
-                // Allow resizing via CSS resize handle, and remove blur on mousedown inside panel
+                // Enable resize via mouse (edges/corners) on desktop
                 panel.style.resize = "both";
                 panel.style.overflow = "auto";
+
+                // Any click inside panel (non-drag) can be used later to toggle blur if desired
                 panel.addEventListener("mousedown", () => {
-                    overlay.classList.add("no-blur");
+                    if (!document.fullscreenElement) {
+                        overlay.classList.add("no-blur");
+                    }
                 });
             }
 
             // Init draggable for art viewer
-            initDraggablePanel(".art-viewer-overlay", ".art-viewer-panel", ".panel-drag-bar");
+            initDraggablePanel(".art-viewer-overlay", ".art-viewer-panel");
 
             /* ===========================
                GLOBAL SEARCH DATA
@@ -581,7 +589,7 @@
             ];
 
             const siteContent = {
-                artworks: artData.slice(), // already has id, title, description, src, date
+                artworks: artData.slice(),
                 blogs: blogSearchDataSeed
             };
 
@@ -863,12 +871,7 @@
                         window.location.href = "index.html#" + result.id;
                     }
                 } else if (result.type === "blog") {
-                    if (pageType === "blog" && typeof window.openBlogFromElement === "function") {
-                        // blog page will handle via hash on load or we can just jump there
-                        window.location.href = "blog.html#" + result.id;
-                    } else {
-                        window.location.href = "blog.html#" + result.id;
-                    }
+                    window.location.href = "blog.html#" + result.id;
                 }
             }
 
