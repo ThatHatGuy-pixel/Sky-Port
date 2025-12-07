@@ -1,153 +1,650 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dev Blog – Game & Art Progress</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-</head>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            /* ===========================
+               BLOG LIST PREVIEW LOGIC
+               (first ~200 words only)
+               =========================== */
+            const posts = document.querySelectorAll(".blog-posts .post-card");
+            const MAX_PREVIEW_WORDS = 200;
 
-<body>
+            posts.forEach((post, index) => {
+                const metaEl = post.querySelector(".post-meta");
+                const summaryEl = post.querySelector(".post-summary");
+                const bodyEl = post.querySelector(".post-body");
+                const beforeAfterEl = post.querySelector(".post-before-after");
 
-    <!-- NAVIGATION (same as home, but Blog active) -->
-    <header>
-        <nav>
-            <div class="logo">Harris Ross</div>
-            <ul>
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="index.html#work" class="nav-link">Portfolio</a></li>
-                <li><a href="blog.html" class="nav-link active">Blog</a></li>
-                <li><a href="index.html#about" class="nav-link">About</a></li>
-                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+                // Build full HTML once for viewer
+                const container = document.createElement("div");
+                if (metaEl) container.appendChild(metaEl.cloneNode(true));
+                if (summaryEl) container.appendChild(summaryEl.cloneNode(true));
+                if (beforeAfterEl) container.appendChild(beforeAfterEl.cloneNode(true));
+                if (bodyEl) container.appendChild(bodyEl.cloneNode(true));
+                post.dataset.fullHtml = container.innerHTML;
 
-    <!-- BLOG HERO / INTRO -->
-    <section class="blog-hero">
-        <div class="blog-hero-inner">
-            <h1>The Unofficial Skyrift blog</h1>
-            <p>
-                A progress report of some of my biggest projects spanning over 3 years and counting. This blog includes the development of 
-                My Skylanders reimagined video game development, experimental robotics, art, and whatever else I can think up!
-            </p>
-        </div>
-    </section>
+                // Build preview text (~200 words) for the list
+                const fullTextParts = [];
+                if (summaryEl) fullTextParts.push(summaryEl.textContent.trim());
+                if (bodyEl) fullTextParts.push(bodyEl.textContent.trim());
+                const fullText = fullTextParts.join(" ");
+                const words = fullText.split(/\s+/);
+                const previewWords = words.slice(0, MAX_PREVIEW_WORDS);
+                const previewText = previewWords.join(" ") + (words.length > MAX_PREVIEW_WORDS ? " ... read more" : "");
 
-    <!-- BLOG POSTS -->
-    <section class="blog">
-        <div class="blog-posts">
+                if (summaryEl) {
+                    summaryEl.textContent = previewText;
+                }
+                if (bodyEl) {
+                    bodyEl.style.display = "none"; // hide full body in list
+                }
+                if (beforeAfterEl) {
+                    beforeAfterEl.style.display = "none"; // hide image comparison in list view
+                }
+            });
 
-            <!-- POST 1 -->
-            <article class="post-card">
-                <div class="post-meta">
-                    <span class="post-date">2025</span>
-                    <span class="post-tag">Art Growth</span>
-                </div>
-                <h2 class="post-title">Year 1 vs Year 3 – Creature Design Glow Up</h2>
-                <p class="post-summary">
-                    Comparing my very first enemy concept with my current redesign. 
-                    I break down what changed in silhouette, anatomy, and color.
-                </p>
+            /* ===========================
+               BLOG VIEWER LOGIC
+               =========================== */
+            const blogViewerOverlay = document.getElementById("blogViewerOverlay");
+            const blogViewerTitle = document.getElementById("blogViewerTitle");
+            const blogViewerBody = document.getElementById("blogViewerBody");
+            const blogViewerSuggestions = document.getElementById("blogViewerSuggestions");
+            const blogViewerSuggestionsWrapper = document.getElementById("blogViewerSuggestionsWrapper");
+            const blogViewerClose = document.getElementById("blogViewerClose");
+            const blogBackdrop = document.querySelector(".blog-viewer-backdrop");
+            const blogViewerPanel = document.querySelector(".blog-viewer-panel");
+            const blogViewerContent = document.querySelector(".blog-viewer-content");
+            const blogFullscreenBtn = document.getElementById("blogFullscreenBtn");
 
-                <div class="post-before-after">
-                    <div class="ba">
-                        <h3>Before</h3>
-                        <!-- replace with your own image -->
-                        <img src="images/before-creature.jpg" alt="Old creature design">
-                        <p>My early version – lots of details, but weak silhouette and muddy shapes.</p>
-                    </div>
-                    <div class="ba">
-                        <h3>After</h3>
-                        <!-- replace with your own image -->
-                        <img src="images/after-creature.jpg" alt="Improved creature design">
-                        <p>Redesigned with clearer shape language, stronger pose, and focused color palette.</p>
-                    </div>
-                </div>
+            // allow resize by mouse, but no dragging
+            if (blogViewerPanel) {
+                blogViewerPanel.style.resize = "both";
+                blogViewerPanel.style.overflow = "auto";
+            }
 
-                <p class="post-body">
-                    I learned to thumbnail silhouettes first, then layer in details. 
-                    This helped the creature read better at game-ready sizes on screen.
-                </p>
-            </article>
+            let isBlogFullscreen = false;
 
-            <!-- POST 2 -->
-            <article class="post-card">
-                <div class="post-meta">
-                    <span class="post-date">2024</span>
-                    <span class="post-tag">3D Pipeline</span>
-                </div>
-                <h2 class="post-title">From First Sculpt to Game-Ready Character</h2>
-                <p class="post-summary">
-                    A look at my process learning sculpting, retopology, UVs, baking, and importing into the engine.
-                </p>
-                <p class="post-body">
-                    My first characters never left the sculpting phase. Over time, I forced myself to finish the full pipeline:
-                    clean topology, proper UVs, normal/AO maps, and finally seeing them running around in-game.
-                </p>
-            </article>
+            function resetBlogPanelPosition() {
+                if (!blogViewerPanel) return;
+                blogViewerPanel.style.position = "";
+                blogViewerPanel.style.left = "";
+                blogViewerPanel.style.top = "";
+                blogViewerPanel.style.margin = "";
+            }
 
-            <!-- POST 3 -->
-            <article class="post-card">
-                <div class="post-meta">
-                    <span class="post-date">5/12/2025</span>
-                    <span class="post-tag">A questionable start</span>
-                </div>
-                <h2 class="post-title">First post.</h2>
-                 
-                <p class="post-summary" style="color: #29023d;">
-                     During a Game Development course, my instructor once told us "Make a portfolio to document your work." This was followed by
-                    the very enthusiastic digital hand of the student next to me as he proceeded to give us a full tour of his website. A blog 
-                    spanning <b> 5 years </b> of his life working on these  mobile games, impressive right? Well, that seemed the general consensus on the 
-                    zoom call. But now I can't help but wonder if he ever got recognition for such an impressive feat, the suspiciously similar 
-                    “Zenith jump” to flappy bird, or that one weird game with the plastic man with the stretchy face. Though these games wouldn't 
-                    get him far in popularity considering the cut throat world programming, he had a window to where he was and what he’s achieved now. 
-                    This is also, for any hesitant game makers out there, exactly what you should be doing when learning  Then our instructor cut 
-                    him off so we could get the hell on with learning C#.
-                    
-                    Before writing this first blog post, I thought, "Oh god, I really don't want to code a blog post". <br>Because I don't really
-                    anything impressive to document, nothing too big happens in my life, the usual things of though, and my art, so that's what I've
-                    settled on.
-                    So now begs the question: how on earth am I going to consolidate all the poorly executed projects I've made and or will make 
-                    into an HTML script I can barely read? Then I realised, no one's reading this. And if you are... welcome to this strange site. 
-                    If I'm being honest, this terrible first impression I'm making is partly due to the fact I detest writers block,
-                    and after avoiding writing anything for two weeks, I thought I might as well write SOMETHING just so I have
-                    solid proof that yes- I did make a website. <em> I was here </em>
-                 <br>
-                <br>
-                <br>
-                     This is more a free form section, the polished and refined works will be found in the <em> Portfolio </em> 
-                     and while it will give you access
+            function openBlogFromElement(post) {
+                if (!post || !blogViewerOverlay) return;
 
-                    <em>Portfolio</em>.
-                </p>
+                const titleEl = post.querySelector(".post-title");
+                const title = titleEl ? titleEl.textContent.trim() : "Blog post";
+                const fullHtml = post.dataset.fullHtml;
 
-                <div class="post-before-after">
-                    <div class="ba">
-                        <h3>Before</h3>
-                        <!-- replace with your own image -->
-                        <img src="images/before-creature.jpg" alt="Old creature design">
-                        <p>My early version – lots of details, but weak silhouette and muddy shapes.</p>
-                    </div>
-                    <div class="ba">
-                        <h3>After</h3>
-                        <!-- replace with your own image -->
-                        <img src="images/after-creature.jpg" alt="Improved creature design">
-                        <p>Redesigned with clearer shape language, stronger pose, and focused color palette.</p>
-                    </div>
-                </div>
-            </article>
+                blogViewerTitle.textContent = title;
+                blogViewerBody.innerHTML = fullHtml || "";
 
-        </div>
-    </section>
+                updateBlogSuggestions(post);
+                resetBlogPanelPosition();
+                attachSuggestionsScrollWatcher();
 
-    <footer>
-        © 2025 Harris Ross — All Rights Reserved
-    </footer>
+                blogViewerOverlay.classList.add("open");
+                document.body.classList.add("blog-viewer-open");
+                blogViewerOverlay.setAttribute("aria-hidden", "false");
+            }
 
-</body>
-</html>
+            function closeBlogViewer() {
+                if (!blogViewerOverlay) return;
+                if (document.fullscreenElement === blogViewerPanel) {
+                    document.exitFullscreen().catch(() => {});
+                }
+                isBlogFullscreen = false;
+                updateBlogFullscreenIcon();
+                blogViewerOverlay.classList.remove("open");
+                document.body.classList.remove("blog-viewer-open");
+                blogViewerOverlay.setAttribute("aria-hidden", "true");
+                resetBlogPanelPosition();
+                // restore resize when closed
+                if (blogViewerPanel) {
+                    blogViewerPanel.style.resize = "both";
+                }
+            }
 
+            function makeSuggestionSnippet(text) {
+                const words = text.split(/\s+/);
+                const snippetWords = words.slice(0, 40);
+                return snippetWords.join(" ") + (words.length > 40 ? " ... read more" : "");
+            }
+
+            function updateBlogSuggestions(currentPost) {
+                if (!blogViewerSuggestions) return;
+                blogViewerSuggestions.innerHTML = "";
+
+                const all = Array.from(posts).filter(p => p !== currentPost);
+                if (all.length === 0) return;
+
+                // randomize order
+                const shuffled = all.slice().sort(() => Math.random() - 0.5);
+                const others = shuffled.slice(0, 3);
+
+                others.forEach(post => {
+                    const titleEl = post.querySelector(".post-title");
+                    const summaryEl = post.querySelector(".post-summary");
+                    const title = titleEl ? titleEl.textContent.trim() : "Blog post";
+                    const summary = summaryEl ? summaryEl.textContent.trim() : "";
+                    const snippet = makeSuggestionSnippet(summary);
+
+                    const card = document.createElement("button");
+                    card.className = "suggestion-card";
+                    card.innerHTML = `
+                        <h4 class="suggestion-title">${title}</h4>
+                        <p class="suggestion-snippet">
+                            ${snippet}
+                        </p>
+                    `;
+                    card.addEventListener("click", () => openBlogFromElement(post));
+                    blogViewerSuggestions.appendChild(card);
+                });
+            }
+
+            // Fade-in of next posts when reaching near bottom
+            function attachSuggestionsScrollWatcher() {
+                if (!blogViewerContent || !blogViewerSuggestionsWrapper) return;
+
+                function onScroll() {
+                    const { scrollTop, scrollHeight, clientHeight } = blogViewerContent;
+                    if (scrollTop + clientHeight >= scrollHeight - 40) {
+                        blogViewerSuggestionsWrapper.classList.add("suggestions-visible");
+                        blogViewerContent.removeEventListener("scroll", onScroll);
+                    }
+                }
+
+                blogViewerSuggestionsWrapper.classList.remove("suggestions-visible");
+                blogViewerContent.removeEventListener("scroll", onScroll);
+                blogViewerContent.addEventListener("scroll", onScroll);
+            }
+
+            posts.forEach(post => {
+                post.addEventListener("click", () => {
+                    closeArtViewerIfOpen();
+                    openBlogFromElement(post);
+                });
+            });
+
+            if (blogViewerClose) {
+                blogViewerClose.addEventListener("click", closeBlogViewer);
+            }
+            if (blogBackdrop) {
+                blogBackdrop.addEventListener("click", (e) => {
+                    if (e.target.dataset.close === "blog-viewer") {
+                        closeBlogViewer();
+                    }
+                });
+            }
+
+            // Optional: open a specific post via hash, e.g., blog.html#post-glow-up
+            const hash = window.location.hash.replace("#", "");
+            if (hash) {
+                const targetPost = document.querySelector(`.post-card[data-post-id="${hash}"]`);
+                if (targetPost) {
+                    openBlogFromElement(targetPost);
+                }
+            }
+
+            // BLOG FULLSCREEN BUTTON: full screen, no stretching (CSS handles the text box)
+            function enterBlogFullscreen() {
+                if (!blogViewerPanel) return;
+                if (blogViewerPanel.requestFullscreen) {
+                    blogViewerPanel.requestFullscreen().catch(() => {});
+                }
+                if (blogViewerPanel) {
+                    blogViewerPanel.style.resize = "none"; // can't resize while maximised
+                }
+                isBlogFullscreen = true;
+                updateBlogFullscreenIcon();
+            }
+
+            function exitBlogFullscreen() {
+                if (document.fullscreenElement === blogViewerPanel && document.exitFullscreen) {
+                    document.exitFullscreen().catch(() => {});
+                }
+                if (blogViewerPanel) {
+                    blogViewerPanel.style.resize = "both";
+                }
+                isBlogFullscreen = false;
+                updateBlogFullscreenIcon();
+            }
+
+            function updateBlogFullscreenIcon() {
+                const icon = blogFullscreenBtn ? blogFullscreenBtn.querySelector(".fs-icon") : null;
+                if (!icon) return;
+                icon.classList.toggle("fs-enter", !isBlogFullscreen);
+                icon.classList.toggle("fs-exit", isBlogFullscreen);
+            }
+
+            if (blogFullscreenBtn) {
+                blogFullscreenBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    if (!isBlogFullscreen) {
+                        enterBlogFullscreen();
+                    } else {
+                        exitBlogFullscreen();
+                    }
+                });
+            }
+
+            document.addEventListener("fullscreenchange", () => {
+                if (!document.fullscreenElement && isBlogFullscreen) {
+                    if (blogViewerPanel) {
+                        blogViewerPanel.style.resize = "both";
+                    }
+                    isBlogFullscreen = false;
+                    updateBlogFullscreenIcon();
+                }
+            });
+
+            // Expose to search / home page
+            window.openBlogFromElement = openBlogFromElement;
+            window.closeBlogViewer = closeBlogViewer;
+
+            /* ===========================
+               BLOG LAYOUT TOGGLES
+               =========================== */
+            const blogPostsContainer = document.querySelector(".blog-posts");
+            const layoutButtons = document.querySelectorAll(".layout-toggle-btn");
+
+            function setBlogLayout(layout) {
+                if (!blogPostsContainer) return;
+                blogPostsContainer.classList.remove("layout-1", "layout-2", "layout-4");
+                blogPostsContainer.classList.add("layout-" + layout);
+                layoutButtons.forEach(btn => {
+                    btn.classList.toggle("active", btn.dataset.layout === layout);
+                });
+            }
+
+            layoutButtons.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    setBlogLayout(btn.dataset.layout || "1");
+                });
+            });
+
+            /* ===========================
+               GLOBAL SEARCH DATA (BLOG PAGE)
+               =========================== */
+            function getBlogSearchData() {
+                const data = [];
+                posts.forEach((post, index) => {
+                    const id = post.dataset.postId || "post-" + index;
+                    const titleEl = post.querySelector(".post-title");
+                    const summaryEl = post.querySelector(".post-summary");
+                    const bodyEl = post.querySelector(".post-body");
+                    const date = post.dataset.postDate || "2024-01-01";
+
+                    const title = titleEl ? titleEl.textContent.trim() : "Blog post";
+                    const contentParts = [];
+                    if (summaryEl) contentParts.push(summaryEl.textContent.trim());
+                    if (bodyEl) contentParts.push(bodyEl.textContent.trim());
+                    const content = contentParts.join(" ");
+
+                    data.push({
+                        id,
+                        title,
+                        content,
+                        element: post,
+                        date
+                    });
+                });
+                return data;
+            }
+
+            const blogSearchData = getBlogSearchData();
+
+            // Seed artworks for global search on the blog page
+            const artDataSeed = [
+                {
+                    id: "art-1",
+                    title: "Example Painting Title",
+                    description: "An example painting demonstrating colour, composition, and atmosphere. Replace this description with your own notes about process and intent.",
+                    src: "AIE/Ani 3.jpg",
+                    date: "2025-03-01"
+                },
+                {
+                    id: "art-2",
+                    title: "Example Animation Loop",
+                    description: "Short looping animation used as a test for timing, spacing, and character personality.",
+                    src: "images/animation1.gif",
+                    date: "2025-02-15"
+                },
+                {
+                    id: "art-3",
+                    title: "Example Sketch Page",
+                    description: "Rough exploratory sketches for characters and props.",
+                    src: "images/sketch1.jpg",
+                    date: "2024-11-10"
+                },
+                {
+                    id: "art-4",
+                    title: "Example Character Design",
+                    description: "A character concept sheet showing full body, expressions, and outfit details.",
+                    src: "images/character1.jpg",
+                    date: "2024-09-01"
+                },
+                {
+                    id: "art-5",
+                    title: "Example Game Screenshot",
+                    description: "In-engine screenshot from a prototype level.",
+                    src: "images/gamedev1.jpg",
+                    date: "2024-06-20"
+                },
+                {
+                    id: "art-6",
+                    title: "Example Artwork Title A",
+                    description: "Template artwork slot A. Replace the image, title, and description with your own piece.",
+                    src: "images/example-art-a.jpg",
+                    date: "2023-12-12"
+                },
+                {
+                    id: "art-7",
+                    title: "Example Artwork Title B",
+                    description: "Template artwork slot B. Use this for another character or creature design.",
+                    src: "images/example-art-b.jpg",
+                    date: "2023-05-05"
+                }
+            ];
+
+            const siteContent = {
+                artworks: artDataSeed,
+                blogs: blogSearchData
+            };
+
+            /* ===========================
+               GLOBAL SEARCH OVERLAY LOGIC
+               =========================== */
+            const navSearchInput = document.getElementById("navSearchInput");
+            const searchOverlay = document.getElementById("searchOverlay");
+            const searchOverlayBackdrop = document.querySelector(".search-overlay-backdrop");
+            const searchInputOverlay = document.getElementById("searchInputOverlay");
+            const searchResults = document.getElementById("searchResults");
+            const searchCloseBtn = document.getElementById("searchClose");
+            const filterButtons = document.querySelectorAll(".search-filter-btn");
+            const pageType = document.body.dataset.page || "blog";
+
+            let currentTypeFilter = "all";
+            let currentSortOrder = "newest";
+
+            function openSearchOverlay() {
+                if (!searchOverlay) return;
+                searchOverlay.classList.add("open");
+                document.body.classList.add("search-open");
+                searchOverlay.setAttribute("aria-hidden", "false");
+                if (searchInputOverlay) {
+                    searchInputOverlay.value = "";
+                    renderDefaultSearchResults();
+                    searchInputOverlay.focus();
+                }
+            }
+
+            function closeSearchOverlay() {
+                if (!searchOverlay) return;
+                searchOverlay.classList.remove("open");
+                document.body.classList.remove("search-open");
+                searchOverlay.setAttribute("aria-hidden", "true");
+            }
+
+            if (navSearchInput) {
+                navSearchInput.addEventListener("click", openSearchOverlay);
+                navSearchInput.addEventListener("focus", openSearchOverlay);
+            }
+            if (searchCloseBtn) {
+                searchCloseBtn.addEventListener("click", closeSearchOverlay);
+            }
+            if (searchOverlayBackdrop) {
+                searchOverlayBackdrop.addEventListener("click", (e) => {
+                    if (e.target.dataset.close === "search-overlay") {
+                        closeSearchOverlay();
+                    }
+                });
+            }
+
+            filterButtons.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const type = btn.dataset.type;
+                    const sort = btn.dataset.sort;
+
+                    if (type) {
+                        currentTypeFilter = type;
+                        filterButtons.forEach(b => {
+                            if (b.dataset.type) {
+                                b.classList.toggle("active", b.dataset.type === type);
+                            }
+                        });
+                    }
+                    if (sort) {
+                        currentSortOrder = sort;
+                        filterButtons.forEach(b => {
+                            if (b.dataset.sort) {
+                                b.classList.toggle("active", b.dataset.sort === sort);
+                            }
+                        });
+                    }
+
+                    const query = searchInputOverlay ? searchInputOverlay.value : "";
+                    if (query.trim()) {
+                        renderSearchResults(query);
+                    } else {
+                        renderDefaultSearchResults();
+                    }
+                });
+            });
+
+            function highlightText(text, query) {
+                if (!query) return text;
+                const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                const regex = new RegExp(escaped, "gi");
+                return text.replace(regex, (match) => `<span class="highlight">${match}</span>`);
+            }
+
+            function makeSnippet(content, query) {
+                const words = content.split(/\s+/);
+                const lowerQuery = query.toLowerCase();
+                if (!query) {
+                    return words.slice(0, 40).join(" ");
+                }
+                let index = -1;
+                for (let i = 0; i < words.length; i++) {
+                    if (words[i].toLowerCase().includes(lowerQuery)) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index === -1) {
+                    return words.slice(0, 40).join(" ");
+                }
+                const start = Math.max(0, index - 10);
+                const end = Math.min(words.length, index + 40);
+                return words.slice(start, end).join(" ");
+            }
+
+            function sortByDate(arr) {
+                const copy = arr.slice();
+                copy.sort((a, b) => {
+                    const da = new Date(a.date || "2024-01-01").getTime();
+                    const db = new Date(b.date || "2024-01-01").getTime();
+                    return currentSortOrder === "newest" ? db - da : da - db;
+                });
+                return copy;
+            }
+
+            function renderDefaultSearchResults() {
+                if (!searchResults) return;
+                searchResults.innerHTML = "";
+                const wrapper = document.createElement("div");
+                wrapper.className = "search-default-grid";
+
+                const sortedArt = sortByDate(siteContent.artworks).slice(0, 4);
+                const sortedBlogs = sortByDate(siteContent.blogs).slice(0, 4);
+
+                sortedArt.forEach(art => {
+                    const card = document.createElement("button");
+                    card.className = "search-result search-result-art";
+                    card.innerHTML = `
+                        <div class="search-result-thumb">
+                            <img src="${art.src}" alt="${art.title}">
+                        </div>
+                        <div class="search-result-info">
+                            <h3 class="search-result-title">${art.title}</h3>
+                            <p class="search-result-snippet">
+                                ${art.description || "Click to view this artwork in the viewer."}
+                            </p>
+                        </div>
+                    `;
+                    card.addEventListener("click", () => handleResultClick({ type: "art", id: art.id }));
+                    wrapper.appendChild(card);
+                });
+
+                sortedBlogs.forEach(post => {
+                    const snippet = makeSnippet(post.content, "");
+                    const card = document.createElement("button");
+                    card.className = "search-result search-result-blog";
+                    card.innerHTML = `
+                        <div class="search-result-info">
+                            <h3 class="search-result-title">${post.title}</h3>
+                            <p class="search-result-snippet">
+                                ${snippet} <span class="read-more">... read more</span>
+                            </p>
+                        </div>
+                    `;
+                    card.addEventListener("click", () => handleResultClick({ type: "blog", id: post.id }));
+                    wrapper.appendChild(card);
+                });
+
+                searchResults.appendChild(wrapper);
+            }
+
+            function renderSearchResults(query) {
+                if (!searchResults) return;
+                const q = query.trim().toLowerCase();
+                if (!q) {
+                    renderDefaultSearchResults();
+                    return;
+                }
+
+                let matches = [];
+
+                // Art
+                if (currentTypeFilter === "all" || currentTypeFilter === "art") {
+                    siteContent.artworks.forEach(art => {
+                        const haystack = (art.title + " " + (art.description || "")).toLowerCase();
+                        if (haystack.includes(q)) {
+                            matches.push({
+                                type: "art",
+                                id: art.id,
+                                title: art.title,
+                                snippetSource: art.description || "",
+                                src: art.src,
+                                date: art.date
+                            });
+                        }
+                    });
+                }
+
+                // Blogs
+                if (currentTypeFilter === "all" || currentTypeFilter === "blog") {
+                    siteContent.blogs.forEach(post => {
+                        const haystack = (post.title + " " + post.content).toLowerCase();
+                        if (haystack.includes(q)) {
+                            matches.push({
+                                type: "blog",
+                                id: post.id,
+                                title: post.title,
+                                snippetSource: post.content,
+                                element: post.element,
+                                date: post.date
+                            });
+                        }
+                    });
+                }
+
+                if (matches.length === 0) {
+                    searchResults.innerHTML = "";
+                    const empty = document.createElement("p");
+                    empty.className = "search-empty";
+                    empty.textContent = "No results found for that search.";
+                    searchResults.appendChild(empty);
+                    return;
+                }
+
+                matches = sortByDate(matches);
+
+                searchResults.innerHTML = "";
+                const list = document.createElement("div");
+                list.className = "search-results-list";
+
+                matches.forEach(res => {
+                    if (res.type === "art") {
+                        const rawSnippet = makeSnippet(res.snippetSource || "", q);
+                        const card = document.createElement("button");
+                        card.className = "search-result search-result-art";
+                        card.innerHTML = `
+                            <div class="search-result-thumb">
+                                <img src="${res.src}" alt="${res.title}">
+                            </div>
+                            <div class="search-result-info">
+                                <h3 class="search-result-title">${highlightText(res.title, q)}</h3>
+                                <p class="search-result-snippet">
+                                    ${highlightText(rawSnippet, q)}
+                                </p>
+                            </div>
+                        `;
+                        card.addEventListener("click", () => handleResultClick(res));
+                        list.appendChild(card);
+                    } else {
+                        const rawSnippet = makeSnippet(res.snippetSource || "", q);
+                        const card = document.createElement("button");
+                        card.className = "search-result search-result-blog";
+                        card.innerHTML = `
+                            <div class="search-result-info">
+                                <h3 class="search-result-title">${highlightText(res.title, q)}</h3>
+                                <p class="search-result-snippet">
+                                    ${highlightText(rawSnippet, q)} <span class="read-more">... read more</span>
+                                </p>
+                            </div>
+                        `;
+                        card.addEventListener("click", () => handleResultClick(res));
+                        list.appendChild(card);
+                    }
+                });
+
+                searchResults.appendChild(list);
+            }
+
+            if (searchInputOverlay) {
+                searchInputOverlay.addEventListener("input", (e) => {
+                    renderSearchResults(e.target.value);
+                });
+            }
+
+            function handleResultClick(result) {
+                closeSearchOverlay();
+                if (result.type === "art") {
+                    window.location.href = "index.html#" + result.id;
+                } else if (result.type === "blog") {
+                    if (pageType === "blog" && result.element) {
+                        openBlogFromElement(result.element);
+                    } else {
+                        window.location.href = "blog.html#" + result.id;
+                    }
+                }
+            }
+
+            if (searchOverlay && searchResults) {
+                renderDefaultSearchResults();
+            }
+
+            /* ===========================
+               CROSS-VIEWER CLOSE HELPERS
+               =========================== */
+            function closeArtViewerIfOpen() {
+                if (window.closeArtViewer) {
+                    window.closeArtViewer();
+                }
+            }
+        });
+    </script>
