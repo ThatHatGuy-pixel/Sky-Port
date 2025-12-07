@@ -11,7 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
-<body data-page="home">
+<!-- HOME BACKGROUND: change via CSS variables --home-bg-color / --home-hero-bg-image -->
+<body class="home-page" data-page="home">
 
     <!-- NAVIGATION -->
     <header>
@@ -39,7 +40,6 @@
     </header>
 
     <!-- HERO SECTION -->
-    <!-- HOME BACKGROUND: change via CSS (hero + body background) -->
     <section class="hero">
         <div class="hero-inner">
 
@@ -90,7 +90,7 @@
                 <div class="home-milestone-card">
                     <h3>1. First spark</h3>
                     <p>
-                        Early Skylanders fan-art, cursed first models, and tiny Unity tests.
+                        Early Skylanders-inspired fan-art, cursed first models, and tiny Unity tests.
                         The “this might actually be a real game” era.
                     </p>
                 </div>
@@ -98,14 +98,14 @@
                     <h3>2. Building the portal</h3>
                     <p>
                         Experimenting with NFC chips, homemade portals, and connecting toys to code.
-                        Hardware + art + game design all colliding.
+                        Hardware + art + game design colliding.
                     </p>
                 </div>
                 <div class="home-milestone-card">
                     <h3>3. World in progress</h3>
                     <p>
-                        Designing characters, enemies, and environments that all feel like they
-                        belong in the same universe – while still levelling up my art.
+                        Designing characters, enemies, and environments that feel like the same universe –
+                        while still levelling up my art.
                     </p>
                 </div>
             </div>
@@ -186,7 +186,36 @@
         </div>
     </section>
 
-    <!-- ABOUT + CONTACT MERGED -->
+    <!-- LATEST FROM BLOG (HOME PREVIEW) -->
+    <section id="home-blog" class="home-blog-preview">
+        <h2>Latest from the Blog</h2>
+        <div class="home-blog-grid">
+            <article class="home-blog-card">
+                <h3>Year 1 vs Year 3 – Creature Design Glow Up</h3>
+                <p>
+                    Comparing my very first enemy concept with my current redesign. I break down what
+                    changed in silhouette, anatomy, and color.
+                </p>
+                <a href="blog.html#post-glow-up" class="home-blog-link">Open post</a>
+            </article>
+            <article class="home-blog-card">
+                <h3>From First Sculpt to Game-Ready Character</h3>
+                <p>
+                    A look at my process learning sculpting, retopology, UVs, baking, and importing into the engine.
+                </p>
+                <a href="blog.html#post-pipeline" class="home-blog-link">Open post</a>
+            </article>
+            <article class="home-blog-card">
+                <h3>First post.</h3>
+                <p>
+                    A messy, honest starting point – proof that the site exists and the dev journey has actually begun.
+                </p>
+                <a href="blog.html#post-first" class="home-blog-link">Open post</a>
+            </article>
+        </div>
+    </section>
+
+    <!-- ABOUT + CONTACT (MERGED) -->
     <section id="about" class="about">
         <h2>About Me</h2>
         <p>
@@ -255,16 +284,16 @@
                     placeholder="Search art & blog..."
                     autocomplete="off"
                 />
-            </div>
 
-            <!-- SEARCH FILTERS (type + sort) -->
-            <div class="search-filters">
-                <button class="search-filter-btn active" data-type="all">All</button>
-                <button class="search-filter-btn" data-type="art">Art only</button>
-                <button class="search-filter-btn" data-type="blog">Blog only</button>
-                <span class="search-filter-separator"></span>
-                <button class="search-filter-btn active" data-sort="newest">Newest first</button>
-                <button class="search-filter-btn" data-sort="oldest">Oldest first</button>
+                <!-- SEARCH FILTERS -->
+                <div class="search-filters">
+                    <button class="search-filter-btn active" data-type="all">All</button>
+                    <button class="search-filter-btn" data-type="art">Art only</button>
+                    <button class="search-filter-btn" data-type="blog">Blog only</button>
+                    <span class="search-filter-divider"></span>
+                    <button class="search-filter-btn active" data-sort="newest">Newest</button>
+                    <button class="search-filter-btn" data-sort="oldest">Oldest</button>
+                </div>
             </div>
 
             <div class="search-overlay-results" id="searchResults">
@@ -279,10 +308,10 @@
             /* ===========================
                PORTFOLIO FILTER
                =========================== */
-            const buttons = document.querySelectorAll(".filter-buttons button");
+            const filterButtons = document.querySelectorAll(".filter-buttons button");
             const items = document.querySelectorAll(".gallery .item");
 
-            buttons.forEach(btn => {
+            filterButtons.forEach(btn => {
                 btn.addEventListener("click", () => {
                     const filter = btn.dataset.filter;
 
@@ -309,13 +338,6 @@
             const artBackdrop = document.querySelector(".art-viewer-overlay .overlay-backdrop");
             const artFullscreenBtn = document.getElementById("artFullscreenBtn");
             const artMainWrapper = document.getElementById("artMainWrapper");
-            const artViewerPanel = document.querySelector(".art-viewer-panel");
-
-            // allow resize by mouse, but no dragging
-            if (artViewerPanel) {
-                artViewerPanel.style.resize = "both";
-                artViewerPanel.style.overflow = "auto";
-            }
 
             const artData = [];
 
@@ -336,9 +358,7 @@
                     date
                 });
 
-                // Click on gallery item opens art viewer
                 item.addEventListener("click", () => {
-                    closeBlogViewerIfOpen();
                     openArtViewerById(id);
                 });
             });
@@ -377,14 +397,6 @@
                 });
             }
 
-            function resetArtPanelPosition() {
-                if (!artViewerPanel) return;
-                artViewerPanel.style.position = "";
-                artViewerPanel.style.left = "";
-                artViewerPanel.style.top = "";
-                artViewerPanel.style.margin = "";
-            }
-
             function openArtViewerById(id) {
                 const art = artData.find(a => a.id === id);
                 if (!art) return;
@@ -399,7 +411,6 @@
                 artViewerDescription.textContent = art.description;
 
                 setActiveArtListItem(id);
-                resetArtPanelPosition();
 
                 artViewerOverlay.classList.add("open");
                 document.body.classList.add("art-viewer-open");
@@ -414,7 +425,6 @@
                 artViewerOverlay.classList.remove("open");
                 document.body.classList.remove("art-viewer-open");
                 artViewerOverlay.setAttribute("aria-hidden", "true");
-                resetArtPanelPosition();
             }
 
             if (artViewerClose) {
@@ -486,7 +496,7 @@
             window.closeArtViewer = closeArtViewer;
 
             /* ===========================
-               GLOBAL SEARCH DATA (HOME)
+               GLOBAL SEARCH DATA
                =========================== */
             const blogSearchDataSeed = [
                 {
@@ -528,7 +538,6 @@
 
             /* ===========================
                GLOBAL SEARCH OVERLAY LOGIC
-               (art + blogs, both pages)
                =========================== */
             const navSearchInput = document.getElementById("navSearchInput");
             const searchOverlay = document.getElementById("searchOverlay");
@@ -536,7 +545,7 @@
             const searchInputOverlay = document.getElementById("searchInputOverlay");
             const searchResults = document.getElementById("searchResults");
             const searchCloseBtn = document.getElementById("searchClose");
-            const filterButtons = document.querySelectorAll(".search-filter-btn");
+            const searchFilterButtons = document.querySelectorAll(".search-filter-btn");
             const pageType = document.body.dataset.page || "home";
 
             let currentTypeFilter = "all";
@@ -577,14 +586,14 @@
                 });
             }
 
-            filterButtons.forEach(btn => {
+            searchFilterButtons.forEach(btn => {
                 btn.addEventListener("click", () => {
                     const type = btn.dataset.type;
                     const sort = btn.dataset.sort;
 
                     if (type) {
                         currentTypeFilter = type;
-                        filterButtons.forEach(b => {
+                        searchFilterButtons.forEach(b => {
                             if (b.dataset.type) {
                                 b.classList.toggle("active", b.dataset.type === type);
                             }
@@ -592,7 +601,7 @@
                     }
                     if (sort) {
                         currentSortOrder = sort;
-                        filterButtons.forEach(b => {
+                        searchFilterButtons.forEach(b => {
                             if (b.dataset.sort) {
                                 b.classList.toggle("active", b.dataset.sort === sort);
                             }
@@ -649,6 +658,7 @@
             function renderDefaultSearchResults() {
                 if (!searchResults) return;
                 searchResults.innerHTML = "";
+
                 const wrapper = document.createElement("div");
                 wrapper.className = "search-default-grid";
 
@@ -702,7 +712,6 @@
 
                 let matches = [];
 
-                // Art
                 if (currentTypeFilter === "all" || currentTypeFilter === "art") {
                     siteContent.artworks.forEach(art => {
                         const haystack = (art.title + " " + (art.description || "")).toLowerCase();
@@ -719,7 +728,6 @@
                     });
                 }
 
-                // Blogs
                 if (currentTypeFilter === "all" || currentTypeFilter === "blog") {
                     siteContent.blogs.forEach(post => {
                         const haystack = (post.title + " " + post.content).toLowerCase();
@@ -754,34 +762,34 @@
                     if (res.type === "art") {
                         const rawSnippet = makeSnippet(res.snippetSource || "", q);
                         const card = document.createElement("button");
-                            card.className = "search-result search-result-art";
-                            card.innerHTML = `
-                                <div class="search-result-thumb">
-                                    <img src="${res.src}" alt="${res.title}">
-                                </div>
-                                <div class="search-result-info">
-                                    <h3 class="search-result-title">${highlightText(res.title, q)}</h3>
-                                    <p class="search-result-snippet">
-                                        ${highlightText(rawSnippet, q)}
-                                    </p>
-                                </div>
-                            `;
-                        card.addEventListener("click", () => handleResultClick(res));
-                        list.appendChild(card);
-                    } else {
-                        const rawSnippet = makeSnippet(res.snippetSource || "", q);
-                        const card = document.createElement("button");
-                        card.className = "search-result search-result-blog";
+                        card.className = "search-result search-result-art";
                         card.innerHTML = `
+                            <div class="search-result-thumb">
+                                <img src="${res.src}" alt="${res.title}">
+                            </div>
                             <div class="search-result-info">
                                 <h3 class="search-result-title">${highlightText(res.title, q)}</h3>
                                 <p class="search-result-snippet">
-                                    ${highlightText(rawSnippet, q)} <span class="read-more">... read more</span>
+                                    ${highlightText(rawSnippet, q)}
                                 </p>
                             </div>
                         `;
                         card.addEventListener("click", () => handleResultClick(res));
                         list.appendChild(card);
+                    } else {
+                        const rawSnippet = makeSnippet(res.snippetSource || "", q);
+                        const card = document.createElement("button");
+                            card.className = "search-result search-result-blog";
+                            card.innerHTML = `
+                                <div class="search-result-info">
+                                    <h3 class="search-result-title">${highlightText(res.title, q)}</h3>
+                                    <p class="search-result-snippet">
+                                        ${highlightText(rawSnippet, q)} <span class="read-more">... read more</span>
+                                    </p>
+                                </div>
+                            `;
+                            card.addEventListener("click", () => handleResultClick(res));
+                            list.appendChild(card);
                     }
                 });
 
@@ -809,15 +817,6 @@
 
             if (searchOverlay && searchResults) {
                 renderDefaultSearchResults();
-            }
-
-            /* ===========================
-               CROSS-VIEWER CLOSE HELPERS
-               =========================== */
-            function closeBlogViewerIfOpen() {
-                if (window.closeBlogViewer) {
-                    window.closeBlogViewer();
-                }
             }
         });
     </script>
